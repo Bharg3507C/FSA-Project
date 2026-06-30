@@ -1,86 +1,101 @@
-# EFAR MediFlow — Full Stack Project
+# EFAR — Emergency First Aid Response Workforce System
 
-## Structure
-```
-efar_final/
-├── client/          ← React/Vite frontend (port 5173)
-│   ├── src/
-│   │   ├── App.jsx       ← Full UI
-│   │   ├── http.js       ← API fetch helper
-│   │   ├── main.jsx      ← React entry
-│   │   └── index.css     ← Global styles
-│   ├── index.html
-│   ├── vite.config.js
-│   └── package.json
-│
-└── server/          ← Node/Express backend (port 3001)
-    ├── index.js          ← All-in-one server + bot logic
-    ├── package.json
-    ├── .env              ← Your credentials (pre-filled)
-    └── .env.example      ← Safe version to commit
-```
+## Problem
 
----
+EFAR is a Singapore-based private ambulance provider. Shift scheduling, leave management, and conflict resolution were previously handled informally through WhatsApp and spreadsheets. This project replaces that with:
 
-## Commands
+- A web portal for the **Operations Director** (roster planning, leave approvals, conflict detection, employee management)
+- A self-service dashboard for **Paramedics and Drivers** (schedule view, leave requests, profile)
+- A **WhatsApp bot** for submitting leave requests conversationally
 
-### Terminal 1 — Start Server
+## Task Allocation
+
+| Student | Student ID | Responsibilities |
+|---------|-----------|-----------------|
+| Ahmad Faris bin Razali | 253024C | Paramedic/Driver self-service portal, monthly schedule calendar, shift detail view, profile page, settings/password change, sign-out flow |
+
+## How to Run Locally
+
+### Prerequisites
+
+- Node.js 18 or later
+- npm
+
+### 1. Start the backend
+
 ```bash
-cd server
-npm install
-node index.js
-```
-
-### Terminal 2 — Start Client
-```bash
-cd client
+cd backend
 npm install
 npm run dev
 ```
 
-### Terminal 3 — Expose server publicly (required for WhatsApp)
+Server starts on **http://localhost:3001**
+
+### 2. Start the frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+App opens at **http://localhost:5173**
+
+### 3. Expose the backend for WhatsApp (optional)
+
 ```bash
 npm install -g ngrok
 ngrok http 3001
 ```
-Copy the `https://xxxx.ngrok-free.app` URL
 
----
+Copy the `https://xxxx.ngrok-free.app` URL, then:
 
-## Meta Webhook Setup (do this once)
 1. Go to Meta Developer Console → Your App → WhatsApp → Configuration
-2. Callback URL: `https://xxxx.ngrok-free.app/webhook`
-3. Verify Token: `EFAR_WEBHOOK_2025`
-4. Click **Verify and Save**
-5. Webhook Fields → tick **messages** → Save
+2. **Callback URL:** `https://xxxx.ngrok-free.app/webhook`
+3. **Verify Token:** `EFAR_WEBHOOK_2025`
+4. Click **Verify and Save** → tick **messages** → Save
 
----
+### 4. Run tests
 
-## Test
 ```bash
-# Health check
-curl http://localhost:3001/healthz
+# Frontend unit tests
+cd frontend && npm test
 
-# Pending approvals
-curl http://localhost:3001/api/leave/pending
+# Backend unit tests
+cd backend && npm test
 ```
 
----
+## Environment Variables
 
-## Bot Flow
+Copy `.env.example` to `.env` in each folder and fill in real values.
+See [`deployment.md`](deployment.md) for the full variable reference.
+
+## Project Structure
+
 ```
-User types: leave
-Bot: What is your full name?
-User: Sarah Lim
-Bot: ✅ Name: Sarah Lim — What is your role?
-User: Paramedic
-Bot: ✅ Role: Paramedic — What date(s)?
-User: 10 Jun 2025
-Bot: ✅ Date(s): 10 Jun 2025 — What is your Ambulance ID?
-User: AMB-01
-Bot: ✅ Ambulance: AMB-01 — What type of leave?
-User: MC
-Bot: ✅ Leave Type: Medical Leave — Please upload your MC.
-User: [uploads photo]
-Bot: ✅ Document received — Request submitted! Ref: LR-xxx
+efar_final/
+├── design/                     # System design documentation
+│   ├── problem-statement.md
+│   ├── architecture.md
+│   ├── architecture-diagram.md
+│   ├── er-diagram.md
+│   └── ahmad-faris/            # Individual design docs
+│       ├── use-cases.md
+│       ├── api-documentation.md
+│       └── database-schema.md
+│
+├── frontend/                   # React + Vite application
+│   ├── src/                    # App source code
+│   ├── tests/ahmad-faris/      # Frontend unit tests
+│   ├── package.json
+│   └── .env.example
+│
+├── backend/                    # Node.js + Express API
+│   ├── src/                    # Server source code
+│   ├── tests/ahmad-faris/      # Backend unit tests
+│   ├── package.json
+│   └── .env.example
+│
+├── deployment.md
+└── README.md
 ```

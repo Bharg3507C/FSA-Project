@@ -1,4 +1,4 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #0f1c2e; color: #e2e8f0; }
+body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #f5f5ff; color: #111827; }
 button { cursor: pointer; }
 a { text-decoration: none; }
